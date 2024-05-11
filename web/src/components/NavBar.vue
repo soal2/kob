@@ -1,6 +1,6 @@
 <!--写html-->
 <template>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">  <!--设置外观样式-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" >  <!--设置外观样式-->
   <div class="container">
     <!--避免了界面切换时的刷新-->
     <router-link class="navbar-brand" :to="{name:'home'}">King Of Bots</router-link>
@@ -33,7 +33,7 @@
           </ul>
         </li>
       </ul>
-      <ul class="navbar-nav" v-else>
+      <ul class="navbar-nav" v-else-if="!$store.state.user.pulling_info">
         <li class="nav-item">
           <router-link class="nav-link" :to="{name : 'user_account_login' }" role="button" >
             登录
@@ -57,16 +57,33 @@ import { useRoute } from 'vue-router'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 
+
 export default {
   setup(){
     const store = useStore();
     const route = useRoute();
     let route_name = computed(() => route.name)
+    //let show_bar = ref(false);
 
     const logout = () => {
       store.dispatch("logout");
     }
 
+    //取出localStorage的token判断是否合法，是则直接进入首页
+    // const jwt_token = localStorage.getItem("jwt_token");
+    // if(jwt_token){
+    //     store.commit("updateToken", jwt_token);
+    //     store.dispatch("getinfo",{   //条用的方法，参数 
+    //         success(){
+    //             router.push({ name : "home" });
+    //         },
+    //         error(){
+    //             show_bar.value = true;
+    //         }
+    //     })
+    // } else {
+    //     show_bar.value = true;
+    // }
 
     return {
       route_name,

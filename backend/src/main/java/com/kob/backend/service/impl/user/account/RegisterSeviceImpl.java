@@ -51,17 +51,17 @@ public class RegisterSeviceImpl implements RegisterService {
 
         if(password.length() > 100 || confirmedPassword.length() > 100)
         {
-            map.put("error_message", "密码长度不能大于100");
+            map.put("error_message", "密码长度不能大于100！");
             return map;
         }
 
         if(password.length() == 0 || confirmedPassword.length() == 0){
-            map.put("error_message", "密码不能为空");
+            map.put("error_message", "密码不能为空！");
             return map;
         }
 
         if(!password.equals(confirmedPassword)){
-            map.put("error_message", "两次密码不一");
+            map.put("error_message", "两次密码不一致！");
             return map;
         }
 
@@ -70,6 +70,7 @@ public class RegisterSeviceImpl implements RegisterService {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();  //创建查询对象
         queryWrapper.eq("username", username);  //指定查询条件
         List<User> users = userMapper.selectList(queryWrapper);  //从数据库检索所有符合条件的用户记录以list的形式返回给users
+
         if(!users.isEmpty()){
             map.put("error_message", "用户名已存在");
             return map;
@@ -77,7 +78,7 @@ public class RegisterSeviceImpl implements RegisterService {
 
         String encodedPassword = passwordEncoder.encode(password);
         String photo = "https://cdn.acwing.com/media/user/profile/photo/282107_lg_ae3a889ab4.jpg";
-        User user = new User(null, username, password, photo);  //将新用户的信息保存
+        User user = new User(null, username, encodedPassword, photo);  //将新用户的信息保存
         userMapper.insert(user);  //存入数据库
 
         map.put("error_message", "success");

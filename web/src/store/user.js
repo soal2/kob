@@ -7,6 +7,7 @@ export default {
         photo: "",
         token: "",
         is_login: false,
+        pulling_info: true,  //是否正在拉取信息
     },
     getters: {
     },
@@ -28,6 +29,9 @@ export default {
             state.photo = "";
             state.token = "";
             state.is_login = false;
+        },
+        updatePullingInfo(state, pulling_info){
+            state.pulling_info = pulling_info;
         }
     },
     actions: {
@@ -42,6 +46,7 @@ export default {
                 success(resp){
                     if(resp.error_message === "success")
                     {
+                        localStorage.setItem("jwt_token", resp.token);  //将用户的token放到浏览器的硬盘中
                         context.commit("updateToken", resp.token);  //调用mutations的函数
                         data.success(resp);
                     } else {
@@ -79,6 +84,7 @@ export default {
             })
         },
         logout(context){
+            localStorage.removeItem("jwt_token"); //退出时删除token 
             context.commit("logout");
         }
     },
