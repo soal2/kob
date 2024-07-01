@@ -40,23 +40,50 @@ export class GameMap extends AcGameObject {
 
     //相应鼠标事件
     add_listening_events(){
-        this.ctx.canvas.focus();
+        console.log(this.store.state.record);
 
-        this.ctx.canvas.addEventListener("keydown", e =>{
-            let d = -1;
-            if(e.key === 'w') d = 0;
-            else if(e.key === 'd') d = 1;
-            else if(e.key === 's') d = 2;
-            else if(e.key === 'a') d = 3;
-            
-            // 向后端发送消息
-            if(d >= 0) {
-                this.store.state.pk.socket.send(JSON.stringify({
-                    event : "move",
-                    direction : d,
-                }))
-            }
-        });
+        if(this.store.state.record.is_record) {
+            let k = 0;  //当前已经枚举到的步数
+
+            const a_steps = this.store.state.record.a_steps;
+            const b_steps = this.store.state.record.b_steps;
+            const loser = this.store.state.record.record_loser;
+            const [snake0, snake1] = this.snakes;
+
+            const interval_id = setInterval(() => {
+                if(k >= a_steps.length - 1) {
+                    if (loser === "all" || loser == "A") {
+                        snake0.status = "die";
+                    }
+                    if (loser === "all" || loser === "B") {
+                        snake1.status = "die";
+                    }
+                    clearInterval(interval_id);
+                } else {
+                    snake0.set_direction(parseInt(a_steps[k]));
+                    snake1.set_direction(parseInt(b_steps[k]));
+                }
+                k ++;
+            }, 300);
+        } else {
+            this.ctx.canvas.focus();
+
+            this.ctx.canvas.addEventListener("keydown", e =>{
+                let d = -1;
+                if(e.key === 'w') d = 0;
+                else if(e.key === 'd') d = 1;
+                else if(e.key === 's') d = 2;
+                else if(e.key === 'a') d = 3;
+                
+                // 向后端发送消息
+                if(d >= 0) {
+                    this.store.state.pk.socket.send(JSON.stringify({
+                        event : "move",
+                        direction : d,
+                    }));
+                }
+            });
+        }
     }
 
     start() {
@@ -98,10 +125,11 @@ export class GameMap extends AcGameObject {
 
             for(let i = 0; i < k; i++)
             {
-                if(snake.cells[i].r === cell.r && snake.cells[i].c === cell.c)
-                {
-                    return false;
-                }
+                for(const snake1 of this.snakes)
+                    if(snake1.cells[i].r === cell.r && snake1.cells[i].c === cell.c)
+                    {
+                        return false;
+                    }
             }
         }
 

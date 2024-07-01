@@ -22,7 +22,6 @@
 
   6. 在`controller`文件夹下创建该数据表对应的文件夹实现`XXXController`。
 
-- 哇撒
 
 ---
 
@@ -60,4 +59,12 @@
   - 不管有没有出现异常，`finally`代码块都会执行；
   - `try`中出现异常则执行`catch`，否则跳过；
   - 不管`try`和`catch`的代码块中有`return`时，`finally`仍会执行，且如果`finally`代码块也有`return`，则此代码肯定会返回`finally`执行的`return`值。
+
+
+
+
+
+## 注意要点：
+
+- `pojo`层定义数据表对应的类时，变量的顺序要与数据表中的列一致。
 

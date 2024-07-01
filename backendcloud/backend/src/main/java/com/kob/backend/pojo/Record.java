@@ -16,16 +16,16 @@ public class Record {
     @TableId(type = IdType.AUTO)
     private Integer id;
     private Integer aId;
+    private Integer aSx;
+    private Integer aSy;
     private Integer bId;
     private Integer bSx;
     private Integer bSy;
-    private Integer aSy;
-    private Integer aSx;
     private String aSteps;
     private String bSteps;
     private String map;
     private String loser;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Shanghai")
     private Date createtime;
-
 }
+
